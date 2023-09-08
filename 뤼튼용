@@ -51,3 +51,24 @@ correlation_filtered = correlation[[col + '_isnull' for col in columns_with_null
 # Display correlation matrix with values
 pd.set_option('display.float_format', '{:.3f}'.format)  # Set float format for display
 print(correlation_filtered)
+
+
+
+현재 df_adj_mv라는 데이터프레임에서 널값을 갖는 데이터 컬럼들임, 영문자가 컬럼명이고 한글이 속성이야
+- CODE_GENDER 성별
+- FLAG_OWN_REALTY 자가부동산보유여부
+- AMT_CREDIT 신용대출금액(USD)
+- NAME_FAMILY_STATUS 결혼상태
+- REGION_POPULATION_RELATIVE 거주지역의표준화된인구
+- DAYS_BIRTH 대출신청시점에서의일단위나이(기준시점대비상대적인시간)
+- DAYS_EMPLOYED 대출신청시점에서의고객의근무일수(기준시점대비상대적인시간)
+- DAYS_REGISTRATION 대출신청이전에고객이등록정보를변경한시점사이의일수(기준시점대비상대적인시간)
+- DAYS_ID_PUBLISH 대출신청이전에고객이신분증을변경한시점사이의일수(기준시점대비상대적인시간)
+- ORGANIZATION_TYPE 근무회사유형
+- CB_SCORE_1 신용점수1
+- CB_SCORE_2 신용점수2
+- CB_SCORE_3 신용점수3
+
+그래서 지금 내가 보ㅓ고싶은것은 결측치가 있는 컬럼에 대해서 해당 컬럼이 결측치 일떄 결측치를 갖고 있지 않는 나머지 컬럼들의 유효값들과 유효값들 건수를 알고싶어
+
+현재 결측치 컬럼들을 리스크화시켜서 전체적으로 표형태로 보고싶은데 파이썬 코드를 좀 짜줘
