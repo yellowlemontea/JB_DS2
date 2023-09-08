@@ -9,3 +9,28 @@ print(correlation)
 CODE_GENDER말고
 널값이 존재하는 컬럼들 다 이렇게 변환해서 gender_isnull처럼 변환해서 최종적으로 전체 상관계수 플롯 그려보고 싶어
 파이썬 코드 짜줘
+
+
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# df_adj_mv is your DataFrame
+
+# List of columns with null values to consider
+columns_with_null = ['CODE_GENDER', 'COLUMN1', 'COLUMN2', ...]  # Add other column names here
+
+# Create new columns for each column with null values indicating whether the value is null (1 if null, 0 otherwise)
+for col in columns_with_null:
+    df_adj_mv[col + '_isnull'] = df_adj_mv[col].isnull().astype(int)
+
+# Compute correlation between the newly created columns and all other columns
+correlation = df_adj_mv.corr()
+
+# Plot correlation matrix as a heatmap
+plt.figure(figsize=(10, 8))
+plt.imshow(correlation, cmap='coolwarm', vmin=-1, vmax=1)
+plt.colorbar()
+plt.title('Correlation Matrix')
+plt.xticks(range(len(correlation.columns)), correlation.columns, rotation=90)
+plt.yticks(range(len(correlation.columns)), correlation.columns)
+plt.show()
