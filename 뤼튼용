@@ -1,0 +1,11 @@
+df_adj_mv['GENDER_isnull'] = df_adj_mv['CODE_GENDER'].isnull().astype(int)
+
+# Compute correlation between 'B_isnull' and all other columns
+correlation = df_adj_mv.corr()['GENDER_isnull']
+
+print(correlation)
+
+이렇게 해서 표형태로 해당 컬럼에 대해 상관계수 파악하는데, 
+CODE_GENDER말고
+널값이 존재하는 컬럼들 다 이렇게 변환해서 gender_isnull처럼 변환해서 최종적으로 전체 상관계수 플롯 그려보고 싶어
+파이썬 코드 짜줘
