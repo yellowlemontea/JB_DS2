@@ -72,3 +72,28 @@ print(correlation_filtered)
 그래서 지금 내가 보ㅓ고싶은것은 결측치가 있는 컬럼에 대해서 해당 컬럼이 결측치 일떄 결측치를 갖고 있지 않는 나머지 컬럼들의 유효값들과 유효값들 건수를 알고싶어
 
 현재 결측치 컬럼들을 리스크화시켜서 전체적으로 표형태로 보고싶은데 파이썬 코드를 좀 짜줘
+
+
+
+
+v
+import pandas as pd
+
+# df_adj_mv is your DataFrame
+
+# List of columns with null values to consider
+columns_with_null = ['CODE_GENDER', 'FLAG_OWN_REALTY', 'AMT_CREDIT', 'NAME_FAMILY_STATUS',
+                     'REGION_POPULATION_RELATIVE', 'DAYS_BIRTH', 'DAYS_EMPLOYED',
+                     'DAYS_REGISTRATION', 'DAYS_ID_PUBLISH', 
+                     'ORGANIZATION_TYPE','CB_SCORE_1','CB_SCORE_2','CB_SCORE_3']
+
+result = pd.DataFrame()
+
+for col in columns_with_null:
+    # Create a mask where the current column is null
+    mask = df_adj_mv[col].isnull()
+    
+    # For each other column, count the number of non-null values when the current column is null
+    result[col] = df_adj_mv.loc[mask].count()
+
+print(result.transpose())
