@@ -34,3 +34,20 @@ plt.title('Correlation Matrix')
 plt.xticks(range(len(correlation.columns)), correlation.columns, rotation=90)
 plt.yticks(range(len(correlation.columns)), correlation.columns)
 plt.show()
+
+
+here
+
+# Create new columns for each column with null values indicating whether the value is null (1 if null, 0 otherwise)
+for col in columns_with_null:
+    df_adj_mv[col + '_isnull'] = df_adj_mv[col].isnull().astype(int)
+
+# Compute correlation between the newly created columns and all other columns
+correlation = df_adj_mv.corr()
+
+# Filter correlation matrix to include only the newly created columns and their correlations with other columns
+correlation_filtered = correlation[[col + '_isnull' for col in columns_with_null]].loc[:, ~correlation.columns.str.endswith('_isnull')]
+
+# Display correlation matrix with values
+pd.set_option('display.float_format', '{:.3f}'.format)  # Set float format for display
+print(correlation_filtered)
