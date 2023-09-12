@@ -438,3 +438,27 @@ def plot_stripplot(df, feature, target, color):
     
     plt.legend()
     plt.show();
+
+
+
+
+
+
+
+
+
+-------------
+
+def plot_stripplot(df, feature, target, color):
+    plt.figure(figsize=(10,6))
+    plt.title("Strip plot of %s by Target" % feature)
+
+    # Plot a strip plot of the feature for each value of the target variable
+    sns.stripplot(x=target, y=feature, data=df,
+                  jitter=True,
+                  palette=color)
+
+    # Disable scientific notation 
+    plt.ticklabel_format(style='plain', axis='y')
+
+    plt.show();
