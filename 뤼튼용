@@ -121,3 +121,11 @@ for column, is_mcar in results.items():
         print(f"{column} is likely MAR or NMAR")
 
 
+
+
+
+
+missing_cols = df_adj_mv.columns[df_adj_mv.isnull().any()].tolist()
+df_with_missing_values = df_adj_mv[missing_cols]
+
+
