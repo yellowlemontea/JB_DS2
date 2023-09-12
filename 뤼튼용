@@ -283,3 +283,21 @@ def plot_distribution(df, feature, target, color):
     plt.show();
 
 이러한 분포함수를 구성했는데 박스플롯도 이렇게 타겟여부 고려해서 그릴수 있게 이와같은 유형으로 파이썬 코드 함수짜줘
+
+
+
+
+---------------
+
+def plot_boxplot(df, feature, target, color):
+    plt.figure(figsize=(10,6))
+    plt.title("Boxplot of %s by Target" % feature)
+    
+    # For each value of the target variable, plot the boxplot of the feature
+    for target_value in df[target].unique():
+        sns.boxplot(x=target,
+                    y=feature,
+                    data=df[df[target] == target_value],
+                    color=color[target_value])
+        
+    plt.show();
