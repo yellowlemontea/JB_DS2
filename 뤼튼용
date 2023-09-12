@@ -416,3 +416,25 @@ Violin plot: Box plot과 Kernel Density Plot을 결합한 형태로서, 분포�
 python
 sns.violinplot(x='target', y='feature', data=df)
 이 외에도, 시각화 방법은 다양하며 데이터와 분석 목적에 따라 적절한 방법을 선택하면 됩니다. 위에서 제시한 방법들이 데이터 탐색에 도움이 되길 바랍니다.
+
+
+
+
+----
+
+def plot_stripplot(df, feature, target, color):
+    plt.figure(figsize=(10,6))
+    plt.title("Strip plot of %s by Target" % feature)
+
+    # For each value of the target variable, plot a strip plot of the feature
+    for target_value in df[target].unique():
+        sns.stripplot(y=df[df[target] == target_value][feature].dropna(),
+                      color=color[target_value],
+                      jitter=True,
+                      label=f'Target {target_value}')
+
+    # Disable scientific notation 
+    plt.ticklabel_format(style='plain', axis='y')
+    
+    plt.legend()
+    plt.show();
