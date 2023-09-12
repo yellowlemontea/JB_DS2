@@ -56,3 +56,34 @@ with fileinput.FileInput(filename, inplace=True) as file:
         print(line.replace("from sklearn.neighbors.base import NeighborsBase, KNeighborsMixin",
                             "from sklearn.neighbors import NeighborsBase, KNeighborsMixin"), end='')
 
+
+
+
+
+
+
+import pandas as pd
+import numpy as np
+
+def test_mcar(df):
+    # 결측 여부를 나타내는 새로운 데이터 프레임 생성
+    df_nan = df.isnull().astype(int)
+    
+    # 모든 변수들 사이의 상관 계수 계산
+    corr_matrix = df_nan.corr().abs()
+
+    # 대각선 요소 제거
+    for x in range(len(corr_matrix )):
+        corr_matrix.iloc[x,x] = 0
+
+    # 상관 계수가 유의미하게 큰 경우가 있는지 확인
+    return corr_matrix.max().max()
+
+# 사용 예시:
+max_corr = test_mcar(your_dataframe)
+if max_corr < 0.05:  # 임곗값은 실험적으로 설정해야 합니다.
+    print("Data is likely MCAR")
+else:
+    print("Data is likely MAR or NMAR")
+
+
