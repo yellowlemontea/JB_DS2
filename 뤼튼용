@@ -257,3 +257,29 @@ MISSING VALUE에 속하는 ORGANIZATION TYPE 관련해서
 ValueError: could not convert string to float: 'Business Entity Type 3'
 
 이러한 에러가 떠 인코딩 문제인거야>
+
+
+-----------------------------
+
+def plot_distribution(df, feature, target, color):
+    
+    plt.figure(figsize=(10,6))
+    plt.title("Distribution of %s by Target" % feature)
+    
+    # For each value of the target variable, plot the distribution of the feature
+    for target_value in df[target].unique():
+        sns.distplot(df[df[target] == target_value][feature].dropna(),
+                     color=color[target_value],
+                     kde=True,
+                     bins=100,
+                     label=f'Target {target_value}')
+        
+    # Disable scientific notation 
+    plt.ticklabel_format(style='plain', axis='y')
+    plt.ticklabel_format(style='plain', axis='x')
+    
+    
+    plt.legend()
+    plt.show();
+
+이러한 분포함수를 구성했는데 박스플롯도 이렇게 타겟여부 고려해서 그릴수 있게 이와같은 유형으로 파이썬 코드 함수짜줘
