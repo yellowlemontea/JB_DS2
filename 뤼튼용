@@ -323,3 +323,52 @@ def plot_boxplot(df, feature, target, colors):
     plt.tight_layout()
     plt.show();
 
+
+------------------------------------
+파이썬으로 시각화하려고 하는데 어떤 개요를 가지고 시각화를 하면 좋을까?
+컬럼은 이와같애
+ 0   대출식별번호                                   24000 non-null  int64  
+ 1   계약유형                                     24000 non-null  object 
+ 2   성별                                       16906 non-null  object 
+ 3   자가부동산보유여부                                14429 non-null  object 
+ 4   자녀수                                      24000 non-null  int64  
+ 5   소득금액(USD)                                24000 non-null  float64
+ 6   신용대출금액(USD)                              16700 non-null  float64
+ 7   소득유형                                     24000 non-null  object 
+ 8   학력                                       24000 non-null  object 
+ 9   결혼상태                                     24000 non-null  object 
+ 10  주거형태                                     24000 non-null  object 
+ 11  거주지역의표준화된인구                              16851 non-null  float64
+ 12  대출신청시점에서의일단위나이(기준시점대비상대적인시간)             19251 non-null  float64
+ 13  대출신청시점에서의고객의근무일수(기준시점대비상대적인시간)           16851 non-null  float64
+ 14  대출신청이전에고객이등록정보를변경한시점사이의일수(기준시점대비상대적인시간)  14267 non-null  float64
+ 15  대출신청이전에고객이신분증을변경한시점사이의일수(기준시점대비상대적인시간)   19259 non-null  float64
+ 16  휴대폰번호등록여부                                24000 non-null  int64  
+ 17  고용주연락처등록여부                               24000 non-null  int64  
+ 18  직장전화번호등록여부                               24000 non-null  int64  
+ 19  집전화번호등록여부                                24000 non-null  int64  
+ 20  이메일주소등록여부                                24000 non-null  int64  
+ 21  거주지등급                                    24000 non-null  int64  
+ 22  대출신청요일                                   24000 non-null  object 
+ 23  대출신청시간대                                  24000 non-null  int64  
+ 24  고객의등록지주소와실거주지일치여부                        24000 non-null  int64  
+ 25  고객의등록지주소와직장주소일치여부                        24000 non-null  int64  
+ 26  고객의실거주지와직장주소일치여부                         24000 non-null  int64  
+ 27  근무회사유형                                   24000 non-null  object 
+ 28  문서2제공여부                                  24000 non-null  int64  
+ 29  문서3제공여부                                  24000 non-null  int64  
+ 30  문서4제공여부                                  24000 non-null  int64  
+ 31  신용점수1                                    17854 non-null  float64
+ 32  신용점수2                                    15726 non-null  float64
+ 33  신용점수3                                    16892 non-null  float64
+ 34  연체여부                                     24000 non-null  int64 
+
+여기서 결측치는 다 넣었고,
+
+연체여부별로 범주형변수는 범주별 건수
+연체여부별로 수치형변수는 도수분포표 및 정규분포표
+그리는거만 했는데
+
+추가로 할거 추천좀 해줘봐
+뭘 시각화 해야할지 모르겠음
+
