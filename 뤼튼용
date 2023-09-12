@@ -301,3 +301,25 @@ def plot_boxplot(df, feature, target, color):
                     color=color[target_value])
         
     plt.show();
+
+
+
+
+----
+
+def plot_boxplot(df, feature, target, colors):
+    plt.figure(figsize=(10,6))
+    plt.title("Boxplot of %s by Target" % feature)
+
+    # Unique values in target column
+    targets = df[target].unique()
+
+    # For each value of the target variable, plot the boxplot of the feature
+    for i in range(len(targets)):
+        plt.subplot(1,len(targets),i+1)
+        sns.boxplot(y=df[df[target]==targets[i]][feature], color=colors[i])
+        plt.title(f'Target {targets[i]}')
+        
+    plt.tight_layout()
+    plt.show();
+
