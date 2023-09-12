@@ -87,3 +87,37 @@ else:
     print("Data is likely MAR or NMAR")
 
 
+
+
+
+
+import pandas as pd
+import numpy as np
+
+def test_mcar(df):
+    # 각 컬럼별로 결측 여부를 나타내는 새로운 데이터 프레임 생성
+    df_nan = df.isnull().astype(int)
+    
+    results = {}
+    
+    # 각 컬럼별로 다른 모든 변수들과의 상관 계수 계산
+    for col in df.columns:
+        corr_matrix = df_nan[[c for c in df.columns if c != col]].corrwith(df_nan[col]).abs()
+        
+        # 상관 계수가 유의미하게 큰 경우가 있는지 확인
+        max_corr = corr_matrix.max()
+        
+        results[col] = max_corr < 0.05  # 임곗값은 실험적으로 설정해야 합니다.
+    
+    return results
+
+# 사용 예시:
+results = test_mcar(your_dataframe)
+
+for column, is_mcar in results.items():
+    if is_mcar:
+        print(f"{column} is likely MCAR")
+    else:
+        print(f"{column} is likely MAR or NMAR")
+
+
