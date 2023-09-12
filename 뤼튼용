@@ -129,3 +129,131 @@ missing_cols = df_adj_mv.columns[df_adj_mv.isnull().any()].tolist()
 df_with_missing_values = df_adj_mv[missing_cols]
 
 
+
+
+-----------------------
+
+def fill_categorical(data, numeric_columns, categorical_columns, target_col_val='CODE_GENDER' ,epochs_val=30, batch_size_val=32 ):
+    
+    # 결측치 있는 데이터 준비
+    data_with_missing = data.copy()
+
+    # 결측치 채우기를 위한 데이터 준비
+    target_column = target_col_val  # 채울 결측치가 있는 컬럼명
+    input_numeric_columns = numeric_columns[1:]
+
+    # 성별 전용
+    data_with_missing.loc[data_with_missing['CODE_GENDER'] == 'XNA', 'CODE_GENDER'] = np.nan
+
+    # 결측치가 없는 데이터 추출 추후 행 인덱스
+    no_missing_data = data_with_missing[data_with_missing[target_column].notnull()]
+    # 결측치 추후에 어떻게 채워지는 지 확인하기 위한 인덱스
+    missing_data_index = data_with_missing[target_column].isnull()
+
+
+
+    # 범주형 변수 인코딩
+    encoder = OneHotEncoder(drop='first')
+    categorical_data_encoded = encoder.fit_transform(data_with_missing[categorical_columns]).toarray()
+
+    # 모든 입력 데이터 결합
+    input_data_encoded = np.hstack((data_with_missing[input_numeric_columns].values, categorical_data_encoded))
+    len(input_data_encoded)
+
+    # 데이터 스케일링
+    scaler = StandardScaler()
+    input_data_scaled = scaler.fit_transform(input_data_encoded)
+
+
+    print(len(input_data_scaled))
+
+    train_data_scaled = input_data_scaled[data_with_missing[target_column].notnull()]
+
+    print(len(train_data_scaled))
+
+    # 결측치를 채울 Autoencoder 모델 구성
+    input_dim = input_data_scaled.shape[1]
+
+
+
+    model = tf.keras.Sequential([
+        tf.keras.layers.Input(shape=(input_dim,)),
+        tf.keras.layers.Dense(65, activation='relu'),
+        tf.keras.layers.Dropout(0.5),  # Dropout 추가
+        tf.keras.layers.Dense(64, activation='relu', kernel_regularizer=tf.keras.regularizers.l2(0.001)),
+        tf.keras.layers.Dropout(0.5),  # Dropout 추가
+        tf.keras.layers.Dense(32, activation='relu'),
+        tf.keras.layers.Dense(2, activation='softmax')  # 선형 활성화 함수 사용
+    ])
+
+    model.compile(optimizer='rmsprop',
+                  loss='categorical_crossentropy',
+                  metrics=['accuracy'])
+
+
+    # 타겟 컬럼 추후 원래 레이블으로 표기하기 위함
+
+    # LabelEncoder 객체 생성 및 학습
+    encoder_target = LabelEncoder()
+    encoder_target.fit(no_missing_data[target_column])
+    integer_encoded_labels = encoder_target.transform(no_missing_data[target_column])
+    integer_encoded_labels
+
+
+
+    one_hot_train_labels = to_categorical(integer_encoded_labels)
+
+    # 모델 훈련전에 검증 데이터 셋으로 분류해 모델 학습이 제대로 되는지 평가
+
+    X_train, X_val, y_train, y_val = train_test_split(train_data_scaled, one_hot_train_labels, test_size=0.2, random_state=42)
+
+    # 과적합 방지 목적으로, 더이상 검증 데이터의 정확성 안올라가면 학습 중지
+    early_stopping_cb = EarlyStopping(monitor='val_loss', patience=5, restore_best_weights=True)
+
+    # 모델 훈련
+    model.fit(X_train, y_train, validation_data=(X_val,y_val), epochs=epochs_val, batch_size=batch_size_val, callbacks=[early_stopping_cb])
+    
+
+    
+    missing_data = input_data_scaled[data_with_missing[target_column].isnull()]
+    print(len(missing_data))
+    print(len(missing_data[0]))
+
+    # 훈련된 모델로 결측치 예측 및 채우기
+    predicted_values = model.predict(missing_data)
+    filled_values = predicted_values.squeeze()
+
+
+    original_label=np.argmax(filled_values, axis=1)
+    predicted_labels_string = encoder_target.inverse_transform(original_label)
+
+    # 결측치를 채워 넣음
+    data_with_fill = data_with_missing.copy()
+    data_with_fill[target_column+"_predicted_flag"] = "N"
+    data_with_fill.loc[data_with_missing[target_column].isnull(), target_column+"_predicted_flag"] = "Y"
+    
+    data_with_fill.loc[data_with_missing[target_column].isnull(), target_column] = predicted_labels_string
+
+
+    print(data_with_fill.loc[missing_data_index, target_column].head())
+    return data_with_fill
+--------------------------------------
+
+
+
+-----------------------------------------
+# 예측변수 다음예측에 사용
+numeric_columns,categorical_columns,missing_values = columns_classification(data)
+FILLED_DATA =fill_categorical(data, numeric_columns, categorical_columns, target_col_val='CODE_GENDER' ,epochs_val=30, batch_size_val=32 )
+numeric_columns,categorical_columns,missing_values = columns_classification(FILLED_DATA)
+FILLED_DATA =fill_categorical(FILLED_DATA, numeric_columns, categorical_columns, target_col_val='FLAG_OWN_REALTY' ,epochs_val=30, batch_size_val=32 )
+
+for i in range(len(missing_values)-1):
+    numeric_columns,categorical_columns,missing_values = columns_classification(FILLED_DATA)
+    FILLED_DATA =fill_numeric(FILLED_DATA, numeric_columns, categorical_columns, target_col_val=missing_values[0] ,epochs_val=32, batch_size_val=32 )
+----------------------------------------
+
+MISSING VALUE에 속하는 ORGANIZATION TYPE 관련해서
+ValueError: could not convert string to float: 'Business Entity Type 3'
+
+이러한 에러가 떠 인코딩 문제인거야>
