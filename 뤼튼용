@@ -2,3 +2,37 @@
 
 
 "Multiple Imputation for Nonresponse in Surveys" by Donald B. Rubin: 이 책에서 Rubin은 단순히 평균값 등으로 대체하는 방법보다 다중 대체법의 우월성을 강조합니다. 이는 상당히 높은 비율의 결손값(예를 들어 20~40%)에 대해서도 유효
+
+
+
+from missingpy import MissForest
+import numpy as np
+from scipy.stats import chi2
+
+def littles_mcar_test(data):
+    data = data.copy()
+    data['nullity'] = data.isnull().apply(sum, axis=1)
+    
+    cols = data.columns.tolist()
+    cols.remove('nullity')
+    
+    observed = []
+    expected = []
+    
+    for col in cols:
+        observed += [data.loc[data[col].isna(), 'nullity'].tolist()]
+        expected += [data.loc[data[col].notna(), 'nullity'].tolist()]
+        
+    observed = np.concatenate(observed)
+    expected = np.concatenate(expected)
+    
+    chi_square_statistic = ((observed - expected)**2 / expected).sum()
+    
+    df = (data.shape[1] - 1) * (data['nullity'].nunique() - 1)
+    
+    p_value = 1 - chi2.cdf(chi_square_statistic, df)
+
+return p_value
+
+# 사용 예시:
+p_value = littles_mcar_test(your_dataframe)
